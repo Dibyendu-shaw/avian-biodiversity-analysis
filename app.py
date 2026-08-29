@@ -15,9 +15,13 @@ st.set_page_config(
 
 # 2. Database Connection & Ingestion with Path Resolution
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, ".."))
-DB_PATH = os.path.join(PROJECT_ROOT, "data", "bird_monitoring.db")
-
+# Try finding in root or in data/ subdirectory
+if os.path.exists(os.path.join(BASE_DIR, "bird_monitoring.db")):
+    DB_PATH = os.path.join(BASE_DIR, "bird_monitoring.db")
+elif os.path.exists(os.path.join(BASE_DIR, "data", "bird_monitoring.db")):
+    DB_PATH = os.path.join(BASE_DIR, "data", "bird_monitoring.db")
+else:
+    DB_PATH = os.path.join(os.path.abspath(os.path.join(BASE_DIR, "..")), "data", "bird_monitoring.db")
 @st.cache_data
 def load_data():
     if not os.path.exists(DB_PATH):
